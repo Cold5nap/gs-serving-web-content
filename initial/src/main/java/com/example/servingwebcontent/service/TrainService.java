@@ -1,2 +1,4 @@
-package com.example.servingwebcontent.service;public interface TrainService {
+package com.example.servingwebcontent.service;
+
+public interface TrainService {
 }

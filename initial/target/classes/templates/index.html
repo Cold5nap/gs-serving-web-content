@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>График движения поездов</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+          crossorigin="anonymous">
+</head>
+<body>
+<header class="d-flex justify-content-center py-3">
+    <a href="/" class="nav-link">Главная</a>
+    <ul class="nav nav-pills">
+        <li class="nav-item"><a href="#" class="nav-link">Добавить:</a></li>
+        <li class="nav-item"><a href="/stations/add" class="nav-link">Станцию</a></li>
+        <li class="nav-item"><a href="/traffic_schedule/add" class="nav-link">График движения</a></li>
+        <li class="nav-item">
+            <form action="/trains/add" method="post">
+                <button type="submit" class="nav-link">Поезд</button>
+            </form>
+        </li>
+    </ul>
+</header>
+<div class="container">
+    <div class="row">
+
+        <table class="table col border m-2">
+            <thead>
+            <tr>
+                <th>Станция</th>
+                <th>Это депо?</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="el : ${stations}">
+                <td>
+                    <div class="d-flex">
+                        <form th:action="'/stations/'+${el.getId()}+'/remove'" method="post">
+                            <button class="btn-sm btn-danger" type="submit">-</button>
+                        </form>
+                        <span th:text="${el.getName()}"></span>
+                    </div>
+                </td>
+                <td th:text="${el.is_depot()}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table col border m-2">
+            <thead>
+            <tr>
+                <th>Номер поезда</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="train : ${trains}">
+                <td class="d-flex">
+                    <form th:action="'/trains/'+${train.getId()}+'/remove'" method="post">
+                        <button class="btn-sm btn-danger" type="submit">-</button>
+                    </form>
+                    <span th:text="${train.getId()}"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div th:each="tr : ${traffic}">
+            <h4>Расписание на <span th:text="${tr.getDate()}"></span></h4>
+            <a class="link-success" th:href="'/traffic_schedule/'+${tr.getId()}+'/add'">
+                Добавить точку маршрута по дате<span th:text="${tr.getDate()}"></span></a>
+
+
+            <form th:action="'/traffic_schedule/'+${tr.getId()}+'/generate_random_delay'" method="post">
+                <button class="btn-sm btn-info" type="submit">
+                    Сгенерировать случайную задержку от 1 до 60 секунд для расписания по дате
+                    <span th:text="${tr.getDate()}"></span></button>
+            </form>
+
+            <table class="table col border m-2">
+                <thead>
+                <tr>
+                    <th>Станция</th>
+                    <th>Номер поезда</th>
+                    <th>Время прибытия</th>
+                    <th>Время отправления</th>
+                    <th>Задержка</th>
+                    <th>Направление</th>
+                    <th>Поезд прибыл</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ts : ${tr.getTrainStations()}">
+                    <td class="d-flex">
+                        <form th:action="'/traffic_schedule/'+${ts.getId()}+'/remove'" method="post">
+                            <button class="btn-sm btn-danger" type="submit">-</button>
+                        </form>
+                        <span th:text="${ts.getStation().getName()}"></span>
+                    </td>
+                    <td th:text="${ts.getTrain().getId()}"></td>
+                    <td th:text="${ts.getArrivalTime()}"></td>
+                    <td th:text="${ts.getDepartureTime()}"></td>
+                    <td th:text="${ts.getDelay()}"></td>
+                    <td th:text="${ts.getDirection()}"></td>
+                    <td th:text="${ts.isHereTrain()}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>

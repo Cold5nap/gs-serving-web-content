@@ -1,2 +1,9 @@
-package com.example.servingwebcontent.service;public interface TrafficScheduleService {
+package com.example.servingwebcontent.service;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class TrafficScheduleService {
+
+    
 }

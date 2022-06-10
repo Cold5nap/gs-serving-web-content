@@ -1,4 +1,4 @@
 package com.example.servingwebcontent.service;
 
-public interface DayOfTheWeekService {
+public interface StationService {
 }
